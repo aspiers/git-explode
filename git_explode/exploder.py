@@ -132,13 +132,26 @@ class GitExploder(object):
 
             print("cherrypick %s" % GitUtils.commit_summary(commit))
 
-            for dependent in deps_on[commit.hex]:
-                del unexploded_deps_from[dependent][commit.hex]
-                if not unexploded_deps_from[dependent]:
-                    new = commits[dependent]
-                    self.logger.debug("pushed to queue: %s" %
-                                      GitUtils.commit_summary(new))
-                    todo.insert(0, new)
+            self.queue_new_leaves(todo, commit, commits, deps_on,
+                                  unexploded_deps_from)
+
+    def queue_new_leaves(self, todo, exploded_commit, commits, deps_on,
+                         unexploded_deps_from):
+        """When a commit is exploded, there may be other commits in the
+        dependency tree which only had a single dependency on this
+        commit.  In that case they have effectively become leaves on
+        the dependency tree of unexploded commits, so they should be
+        added to the explode queue.
+
+        """
+        sha1 = exploded_commit.hex
+        for dependent in deps_on[sha1]:
+            del unexploded_deps_from[dependent][sha1]
+            if not unexploded_deps_from[dependent]:
+                new = commits[dependent]
+                self.logger.debug("pushed to queue: %s" %
+                                  GitUtils.commit_summary(new))
+                todo.insert(0, new)
 
     def get_leaves(self, commits, deps_from):
         """
