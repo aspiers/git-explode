@@ -34,7 +34,7 @@ class GitExploder(object):
         orig_head = GitExplodeUtils.get_head()
         commits, deps_from, deps_on = self.get_dependencies()
         self.explode(commits, deps_from, deps_on)
-        print("checkout %s" % orig_head)
+        self.checkout(orig_head)
 
     def get_dependencies(self):
         """
@@ -101,14 +101,12 @@ class GitExploder(object):
             deps = deps_from[sha]
 
             if not deps:
-                base_desc = GitUtils.commit_summary(self.base_commit)
                 branch = self.topic_mgr.register(sha)
-                print("checkout %s on base %s" % (branch, base_desc))
-                self.current_branch = branch
+                self.checkout_new(branch, self.base)
             else:
                 self.prepare_cherrypick_base(sha, deps.keys(), commits)
 
-            print("cherrypick %s" % GitUtils.commit_summary(commit))
+            GitExplodeUtils.git('cherry-pick', sha)
 
             self.queue_new_leaves(todo, commit, commits, deps_on,
                                   unexploded_deps_from)
@@ -121,21 +119,18 @@ class GitExploder(object):
             branch = existing_branch
             self.topic_mgr.assign(branch, sha)
             if self.current_branch != branch:
-                print("checkout %s" % branch)
-                self.current_branch = branch
+                self.checkout(branch)
         else:
             if existing_branch is None:
                 branch = self.topic_mgr.register(*deps)
-                base_desc = GitUtils.commit_summary(commits[deps[0]])
-                print("checkout %s on %s" % (branch, base_desc))
-                self.current_branch = branch
+                self.checkout_new(branch, deps[0])
                 to_merge = deps[1:]
-                print("merge %s" % ' '.join(to_merge))
+                GitExplodeUtils.git('merge', *to_merge)
             else:
                 # Can reuse existing merge commit, but
                 # create a new branch at the same point
                 branch = self.topic_mgr.register(*deps)
-                print("checkout -b %s %s" % (branch, existing_branch))
+                self.checkout_new(branch, existing_branch)
 
     def queue_new_leaves(self, todo, exploded_commit, commits, deps_on,
                          unexploded_deps_from):
@@ -165,3 +160,13 @@ class GitExploder(object):
             if len(dependencies) == 0:
                 leaves.append(commits[sha])
         return leaves
+
+    def checkout(self, branch):
+        self.logger.debug("checkout %s" % branch)
+        GitExplodeUtils.checkout(branch)
+        self.current_branch = branch
+
+    def checkout_new(self, branch, at):
+        self.logger.debug("checkout -b %s %s" % (branch, at))
+        GitExplodeUtils.checkout_new(branch, at)
+        self.current_branch = branch

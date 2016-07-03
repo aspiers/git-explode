@@ -24,12 +24,30 @@ import subprocess
 
 class GitUtils(object):
     @classmethod
+    def git(cls, *args):
+        cmd_words = ['git'] + list(args)
+        print(' '.join(cmd_words))
+        return cls.quiet_git(*args)
+
+    @classmethod
+    def quiet_git(cls, *args):
+        cmd_words = ['git'] + list(args)
+        output = subprocess.check_output(cmd_words)
+        return output.rstrip()
+
+    @classmethod
     def get_head(cls):
-        """
+        """Retrieve the branch or reference to the current HEAD.
         """
         try:
-            return subprocess.check_output(['git', 'symbolic-ref',
-                                            '--short', '-q', 'HEAD']).rstrip()
+            return cls.quiet_git('symbolic-ref', '--short', '-q', 'HEAD')
         except subprocess.CalledProcessError:
-            return subprocess.check_output(['git', 'rev-parse',
-                                            'HEAD']).rstrip()
+            return cls.quiet_git('rev-parse', 'HEAD')
+
+    @classmethod
+    def checkout(cls, branch):
+        cls.git('checkout', '-q', branch)
+
+    @classmethod
+    def checkout_new(cls, branch, at):
+        cls.git('checkout', '-q', '-b', branch, at)
