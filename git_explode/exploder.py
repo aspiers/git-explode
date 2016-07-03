@@ -121,15 +121,14 @@ class GitExploder(object):
             if self.current_branch != branch:
                 self.checkout(branch)
         else:
+            branch = self.topic_mgr.register(*deps)
             if existing_branch is None:
-                branch = self.topic_mgr.register(*deps)
                 self.checkout_new(branch, deps[0])
                 to_merge = deps[1:]
                 GitExplodeUtils.git('merge', *to_merge)
             else:
                 # Can reuse existing merge commit, but
                 # create a new branch at the same point
-                branch = self.topic_mgr.register(*deps)
                 self.checkout_new(branch, existing_branch)
 
     def queue_new_leaves(self, todo, exploded_commit, commits, deps_on,
