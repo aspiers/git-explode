@@ -21,7 +21,6 @@ from __future__ import print_function, absolute_import
 
 import argparse
 import sys
-import logging
 
 from git_deps.gitutils import GitUtils
 from git_explode import __version__
@@ -45,12 +44,6 @@ def parse_args(args):
         '--version',
         action='version',
         version='git-explode {ver}'.format(ver=__version__))
-    parser.add_argument(
-        '-v', '--verbose',
-        dest="loglevel",
-        help="set loglevel to INFO",
-        action='store_const',
-        const=logging.INFO)
     parser.add_argument(
         '-d', '--debug',
         dest='debug',
