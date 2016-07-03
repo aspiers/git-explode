@@ -28,6 +28,7 @@ class GitExploder(object):
                           (base, GitUtils.commit_summary(self.base_commit)))
         self.head = head
         self.context_lines = context_lines
+        self.topic_mgr = TopicManager('topic%d')
 
     def run(self):
         orig_head = GitExplodeUtils.get_head()
@@ -88,8 +89,7 @@ class GitExploder(object):
         for commit in todo:
             self.logger.debug('  ' + GitUtils.commit_summary(commit))
 
-        current = None
-        topic_mgr = TopicManager('topic%d')
+        self.current_branch = None
 
         while todo:
             commit = todo.pop(0)
@@ -102,38 +102,40 @@ class GitExploder(object):
 
             if not deps:
                 base_desc = GitUtils.commit_summary(self.base_commit)
-                branch = topic_mgr.register(sha)
+                branch = self.topic_mgr.register(sha)
                 print("checkout %s on base %s" % (branch, base_desc))
-                current = branch
+                self.current_branch = branch
             else:
-                deps = deps.keys()
-                self.logger.debug("deps: %r" % deps)
-                existing_branch = topic_mgr.lookup(*deps)
-                if len(deps) == 1:
-                    assert existing_branch is not None
-                    branch = existing_branch
-                    topic_mgr.assign(branch, sha)
-                    if current != branch:
-                        print("checkout %s" % branch)
-                        current = branch
-                else:
-                    if existing_branch is None:
-                        branch = topic_mgr.register(*deps)
-                        base_desc = GitUtils.commit_summary(commits[deps[0]])
-                        print("checkout %s on %s" % (branch, base_desc))
-                        current = branch
-                        to_merge = deps[1:]
-                        print("merge %s" % ' '.join(to_merge))
-                    else:
-                        # Can reuse existing merge commit, but
-                        # create a new branch at the same point
-                        branch = topic_mgr.register(*deps)
-                        print("checkout -b %s %s" % (branch, existing_branch))
+                self.prepare_cherrypick_base(sha, deps.keys(), commits)
 
             print("cherrypick %s" % GitUtils.commit_summary(commit))
 
             self.queue_new_leaves(todo, commit, commits, deps_on,
                                   unexploded_deps_from)
+
+    def prepare_cherrypick_base(self, sha, deps, commits):
+        self.logger.debug("deps: %r" % deps)
+        existing_branch = self.topic_mgr.lookup(*deps)
+        if len(deps) == 1:
+            assert existing_branch is not None
+            branch = existing_branch
+            self.topic_mgr.assign(branch, sha)
+            if self.current_branch != branch:
+                print("checkout %s" % branch)
+                self.current_branch = branch
+        else:
+            if existing_branch is None:
+                branch = self.topic_mgr.register(*deps)
+                base_desc = GitUtils.commit_summary(commits[deps[0]])
+                print("checkout %s on %s" % (branch, base_desc))
+                self.current_branch = branch
+                to_merge = deps[1:]
+                print("merge %s" % ' '.join(to_merge))
+            else:
+                # Can reuse existing merge commit, but
+                # create a new branch at the same point
+                branch = self.topic_mgr.register(*deps)
+                print("checkout -b %s %s" % (branch, existing_branch))
 
     def queue_new_leaves(self, todo, exploded_commit, commits, deps_on,
                          unexploded_deps_from):
