@@ -30,6 +30,9 @@ class GitExploder(object):
         self.context_lines = context_lines
         self.topic_mgr = TopicManager('topic%d')
 
+        # Map commits to their exploded version
+        self.exploded = {}
+
     def run(self):
         orig_head = GitExplodeUtils.get_head()
         commits, deps_from, deps_on = self.get_dependencies()
@@ -107,6 +110,9 @@ class GitExploder(object):
                 self.prepare_cherrypick_base(sha, deps.keys(), commits)
 
             GitExplodeUtils.git('cherry-pick', sha)
+            self.exploded[sha] = GitExplodeUtils.get_head_sha1()
+            self.logger.debug("  cherry-picked %s as %s" %
+                              (sha[:8], self.exploded[sha][:8]))
 
             self.queue_new_leaves(todo, commit, commits, deps_on,
                                   unexploded_deps_from)
@@ -123,8 +129,8 @@ class GitExploder(object):
         else:
             branch = self.topic_mgr.register(*deps)
             if existing_branch is None:
-                self.checkout_new(branch, deps[0])
-                to_merge = deps[1:]
+                self.checkout_new(branch, self.exploded[deps[0]])
+                to_merge = (self.exploded[dep] for dep in deps[1:])
                 GitExplodeUtils.git('merge', *to_merge)
             else:
                 # Can reuse existing merge commit, but

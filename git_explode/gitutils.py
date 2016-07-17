@@ -42,7 +42,11 @@ class GitUtils(object):
         try:
             return cls.quiet_git('symbolic-ref', '--short', '-q', 'HEAD')
         except subprocess.CalledProcessError:
-            return cls.quiet_git('rev-parse', 'HEAD')
+            return cls.get_head_sha1()
+
+    @classmethod
+    def get_head_sha1(cls):
+        return cls.quiet_git('rev-parse', 'HEAD')
 
     @classmethod
     def checkout(cls, branch):
