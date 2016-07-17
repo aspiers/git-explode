@@ -88,7 +88,7 @@ class GitExploder(object):
         # dict which is a value of this dict.
         unexploded_deps_from = copy.deepcopy(deps_from)
 
-        self.logger.debug("queue:")
+        self.logger.debug("Initial queue of leaves:")
         for commit in todo:
             self.logger.debug('  ' + GitUtils.commit_summary(commit))
 
@@ -97,6 +97,7 @@ class GitExploder(object):
         while todo:
             commit = todo.pop(0)
             sha = commit.hex
+            self.logger.debug("Exploding %s" % GitUtils.commit_summary(commit))
             if unexploded_deps_from[sha]:
                 abort("BUG: unexploded deps from %s" %
                       GitUtils.commit_summary(commit))
@@ -111,14 +112,14 @@ class GitExploder(object):
 
             GitExplodeUtils.git('cherry-pick', sha)
             self.exploded[sha] = GitExplodeUtils.get_head_sha1()
-            self.logger.debug("  cherry-picked %s as %s" %
+            self.logger.debug("- cherry-picked %s as %s" %
                               (sha[:8], self.exploded[sha][:8]))
 
             self.queue_new_leaves(todo, commit, commits, deps_on,
                                   unexploded_deps_from)
 
     def prepare_cherrypick_base(self, sha, deps, commits):
-        self.logger.debug("deps: %r" % deps)
+        self.logger.debug("  deps: %s" % ' '.join([d[:8] for d in deps]))
         existing_branch = self.topic_mgr.lookup(*deps)
         if len(deps) == 1:
             assert existing_branch is not None
@@ -151,7 +152,7 @@ class GitExploder(object):
             del unexploded_deps_from[dependent][sha1]
             if not unexploded_deps_from[dependent]:
                 new = commits[dependent]
-                self.logger.debug("pushed to queue: %s" %
+                self.logger.debug("+ pushed to queue: %s" %
                                   GitUtils.commit_summary(new))
                 todo.insert(0, new)
 
@@ -167,11 +168,11 @@ class GitExploder(object):
         return leaves
 
     def checkout(self, branch):
-        self.logger.debug("checkout %s" % branch)
+        #self.logger.debug("checkout %s" % branch)
         GitExplodeUtils.checkout(branch)
         self.current_branch = branch
 
     def checkout_new(self, branch, at):
-        self.logger.debug("checkout -b %s %s" % (branch, at))
+        #self.logger.debug("checkout -b %s %s" % (branch, at))
         GitExplodeUtils.checkout_new(branch, at)
         self.current_branch = branch
