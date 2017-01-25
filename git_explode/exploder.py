@@ -28,7 +28,7 @@ class GitExploder(object):
                           (base, GitUtils.commit_summary(self.base_commit)))
         self.head = head
         self.context_lines = context_lines
-        self.topic_mgr = TopicManager('topic%d')
+        self.topic_mgr = TopicManager('topic%d', self.logger)
 
         # Map commits to their exploded version
         self.exploded = {}
@@ -103,34 +103,37 @@ class GitExploder(object):
                       GitUtils.commit_summary(commit))
 
             deps = deps_from[sha]
-
-            if not deps:
-                branch = self.topic_mgr.register(sha)
-                self.checkout_new(branch, self.base)
-            else:
-                self.prepare_cherrypick_base(sha, deps.keys(), commits)
-
-            GitExplodeUtils.git('cherry-pick', sha)
-            self.exploded[sha] = GitExplodeUtils.get_head_sha1()
-            self.logger.debug("- cherry-picked %s as %s" %
-                              (sha[:8], self.exploded[sha][:8]))
+            self.prepare_cherrypick_base(sha, deps, commits)
+            self.cherry_pick(sha)
 
             self.queue_new_leaves(todo, commit, commits, deps_on,
                                   unexploded_deps_from)
 
     def prepare_cherrypick_base(self, sha, deps, commits):
+        if not deps:
+            branch = self.topic_mgr.next()
+            # We don't assign the topic here, because it will get
+            # assigned by cherry_pick(), and it needs to be done there
+            # to also catch the case where we are cherry-picking to
+            # update an existing branch.
+            self.checkout_new(branch, self.base)
+            return
+
+        deps = deps.keys()
+        assert len(deps) >= 1
         self.logger.debug("  deps: %s" % ' '.join([d[:8] for d in deps]))
+
         existing_branch = self.topic_mgr.lookup(*deps)
         if len(deps) == 1:
-            assert existing_branch is not None
-            branch = existing_branch
-            self.topic_mgr.assign(branch, sha)
-            if self.current_branch != branch:
-                self.checkout(branch)
-        else:
-            branch = self.topic_mgr.register(*deps)
             if existing_branch is None:
-                self.checkout_new(branch, self.exploded[deps[0]])
+                self.checkout_new_dependent_topic(deps)
+            else:
+                branch = existing_branch
+                self.checkout(branch)
+        elif len(deps) > 1:
+            # We'll need to base the cherry-pick on a merge commit
+            if existing_branch is None:
+                self.checkout_new_dependent_topic(deps)
                 to_merge = (self.exploded[dep] for dep in deps[1:])
                 GitExplodeUtils.git('merge', *to_merge)
             else:
@@ -168,11 +171,32 @@ class GitExploder(object):
         return leaves
 
     def checkout(self, branch):
+        if self.current_branch == branch:
+            return
         #self.logger.debug("checkout %s" % branch)
         GitExplodeUtils.checkout(branch)
         self.current_branch = branch
 
     def checkout_new(self, branch, at):
+        assert self.current_branch != branch
         #self.logger.debug("checkout -b %s %s" % (branch, at))
         GitExplodeUtils.checkout_new(branch, at)
         self.current_branch = branch
+
+    def checkout_new_dependent_topic(self, deps):
+        branch = self.topic_mgr.register(*deps)
+        base = self.exploded[deps[0]]
+        self.checkout_new(branch, base)
+
+    def cherry_pick(self, sha):
+        GitExplodeUtils.git('cherry-pick', sha)
+        self.update_current_topic(sha)
+        head = GitExplodeUtils.get_head_sha1()
+        self.exploded[sha] = head
+        commit = GitUtils.ref_commit(self.repo, sha)
+        self.logger.debug("- cherry-picked %s as %s (%s)" %
+                          (sha[:8], self.exploded[sha][:8],
+                           GitUtils.oneline(commit)))
+
+    def update_current_topic(self, *commits):
+        self.topic_mgr.assign(self.current_branch, *commits)

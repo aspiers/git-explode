@@ -13,26 +13,41 @@ class TopicManager(object):
     """
     i = 0
     topics = {}
+    commits = {}
 
-    def __init__(self, template):
+    def __init__(self, template, logger):
         self.template = template
+        self.logger = logger
 
     def lookup(self, *commits):
         name = self._name_for(*commits)
         return self.topics.get(name)
 
     def register(self, *commits):
-        new = self._next()
+        new = self.next()
         self.assign(new, *commits)
         return new
 
-    def assign(self, topic, *commits):
+    def _assign(self, topic, *commits):
         name = self._name_for(*commits)
         self.topics[name] = topic
+        self.commits[topic] = name
+        self.logger.debug("  Assigned %s to %s" % (topic, name))
+
+    def assign(self, topic, *commits):
+        old_commits = self.commits.get(topic)
+        if old_commits:
+            self.unassign(topic, old_commits)
+        self._assign(topic, *commits)
+
+    def unassign(self, topic, commits):
+        del self.topics[commits]
+        del self.commits[topic]
+        self.logger.debug("  Unassigned %s from %s" % (topic, commits))
 
     def _name_for(self, *commits):
         return ' '.join(sorted(commits))
 
-    def _next(self):
+    def next(self):
         self.i += 1
         return self.template % self.i
