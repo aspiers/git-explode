@@ -54,7 +54,7 @@ def parse_args(args):
         dest="prefix",
         help="prefix for all created topic branches",
         type=str,
-        metavar="BASE")
+        metavar="PREFIX")
     parser.add_argument(
         '-c', '--context-lines',
         dest='context_lines',
@@ -70,7 +70,8 @@ def parse_args(args):
     parser.add_argument(
         dest="head",
         help="head of sequence to explode",
-        type=str)
+        type=str,
+        metavar="HEAD")
 
     return parser.parse_args(args)
 
