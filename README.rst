@@ -132,6 +132,24 @@ Split giant commit into commits one per hunk, then regroup into
 commits based on that.
 
 
+Installation
+============
+
+Please see [the `INSTALL.rst` file](INSTALL.rst).
+
+
+Usage
+=====
+
+The tool is not yet documented, but usage is fairly self-explanatory
+if you run `git explode -h`.
+
+
+Development / support / feedback
+================================
+
+Please see `the CONTRIBUTING file <CONTRIBUTING.rst>`_.
+
 
 License
 =======
