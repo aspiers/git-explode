@@ -2,7 +2,7 @@
 git-explode
 ===========
 
-`git-explode` is a tool for automatically exploding a single git
+``git-explode`` is a tool for automatically exploding a single git
 branch into a number of smaller branches which are textually
 independent.  It uses `git-deps
 <https://github.com/aspiers/git-deps>`_ to automatically detect
@@ -37,7 +37,7 @@ it would be a lot harder for your collaborators to review than if you
 had separately submitted three smaller reviews, one for the bugfix,
 one for the refactoring, and one for the new feature.
 
-In this scenario, `git-explode` comes to the rescue!  Rather than you
+In this scenario, ``git-explode`` comes to the rescue!  Rather than you
 having to manually separate out the commits into topic branches, it
 can do all the hard work for you with a single command.
 
@@ -46,7 +46,7 @@ Textual vs. semantic (in)dependence
 ===================================
 
 Astute readers will note that textual independence (as detected by
-`git-deps` and used by `git-explode`) is not the same as semantic /
+``git-deps`` and used by ``git-explode``) is not the same as semantic /
 logical independence.  Textual independence means that the changes can
 be applied in any order without incurring conflicts, but this is not a
 reliable indicator of logical independence.  (This caveat is also
@@ -56,15 +56,15 @@ noted in `the README for git-deps
 For example a change to a function and corresponding changes to the
 tests and/or documentation for that function would typically exist in
 different files.  So if those changes were in separate commits within
-a branch, running `git-explode` on the branch would place those
+a branch, running ``git-explode`` on the branch would place those
 commits in separate branches even though they are logically related,
 because changes in different files (or even in different areas of the
 same files) are textually independent.
 
-So in this case, `git-explode` would not behave exactly how we might
+So in this case, ``git-explode`` would not behave exactly how we might
 want.  And for as long as AI is an unsolved problem, it is very
 unlikely that it will ever develop totally reliable behaviour.
-So does that mean `git-explode` is useless?  Absolutely not!
+So does that mean ``git-explode`` is useless?  Absolutely not!
 
 Firstly, when `best practices for commit hygiene
 <https://wiki.openstack.org/wiki/GitCommitMessages>`_ are adhered to,
@@ -76,11 +76,11 @@ function should all be within a single commit.
 Secondly, whilst textual independence does not imply logical
 independence, the converse is much more commonly true: logical
 independence typically implies textual independence.  So while it
-might not be too uncommon for `git-explode` to separate
+might not be too uncommon for ``git-explode`` to separate
 logically-related changes into different branches, it should be pretty
 rare that it groups logically *unrelated* changes on the same branch.
-Combining this with the fact that `git` makes it easier to merge
-branches together than to split them apart suggests that `git-explode`
+Combining this with the fact that ``git`` makes it easier to merge
+branches together than to split them apart suggests that ``git-explode``
 still has plenty of potential for saving effort.
 
 Thirdly, it is often unhelpful to allow `the quest for the perfect
@@ -107,7 +107,7 @@ Use case #2: Decompose changes for porting
 ------------------------------------------
 
 If you need to backport or forward-port changes between two branches,
-`git-explode` could be used to first decompose the source branch into
+``git-explode`` could be used to first decompose the source branch into
 textually independent topic branches.  Then before any porting starts,
 informed decisions can be made about which topics to port and which
 not to port, and in which order.  Each decomposed topic branch is
@@ -135,14 +135,14 @@ commits based on that.
 Installation
 ============
 
-Please see [the `INSTALL.rst` file](INSTALL.rst).
+Please see `the INSTALL.rst file <INSTALL.rst>`_.
 
 
 Usage
 =====
 
 The tool is not yet documented, but usage is fairly self-explanatory
-if you run `git explode -h`.
+if you run ``git explode -h``.
 
 
 Development / support / feedback
@@ -154,6 +154,7 @@ Please see `the CONTRIBUTING file <CONTRIBUTING.rst>`_.
 License
 =======
 
-Released under [GPL version 2](COPYING) in order to be consistent with
-[`git`'s license](https://github.com/git/git/blob/master/COPYING), but
-I'm open to the idea of dual-licensing if there's a convincing reason.
+Released under `GPL version 2 <COPYING>`_ in order to be consistent
+with `git's license
+<https://github.com/git/git/blob/master/COPYING>`_, but I'm open to
+the idea of dual-licensing if there's a convincing reason.
