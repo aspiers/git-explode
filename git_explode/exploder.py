@@ -173,13 +173,13 @@ class GitExploder(object):
     def checkout(self, branch):
         if self.current_branch == branch:
             return
-        #self.logger.debug("checkout %s" % branch)
+        # self.logger.debug("checkout %s" % branch)
         GitExplodeUtils.checkout(branch)
         self.current_branch = branch
 
     def checkout_new(self, branch, at):
         assert self.current_branch != branch
-        #self.logger.debug("checkout -b %s %s" % (branch, at))
+        # self.logger.debug("checkout -b %s %s" % (branch, at))
         GitExplodeUtils.checkout_new(branch, at)
         self.current_branch = branch
 
