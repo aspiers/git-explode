@@ -26,10 +26,6 @@ from git_deps.gitutils import GitUtils
 from git_explode import __version__
 from git_explode.exploder import GitExploder
 
-__author__ = "Adam Spiers"
-__copyright__ = "Adam Spiers"
-__license__ = "GPL-2+"
-
 
 def parse_args(args):
     """
