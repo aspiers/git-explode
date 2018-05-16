@@ -130,3 +130,12 @@ Use case #4: Breaking down giant commits
 
 Split giant commit into commits one per hunk, then regroup into
 commits based on that.
+
+
+
+License
+=======
+
+Released under [GPL version 2](COPYING) in order to be consistent with
+[`git`'s license](https://github.com/git/git/blob/master/COPYING), but
+I'm open to the idea of dual-licensing if there's a convincing reason.
