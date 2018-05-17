@@ -89,6 +89,10 @@ become the enemy of the good
 tool does not have to be perfect to be useful; it only has to be
 better than performing the same task without the tool.
 
+Further discussion on these points can be found in `an old thread from
+the git mailing list
+<https://public-inbox.org/git/20160528112417.GD11256@pacific.linksys.moosehall/>`_.
+
 Ultimately though, `"the proof is in the pudding"
 <https://en.wiktionary.org/wiki/the_proof_is_in_the_pudding>`_, so try
 it out and see!
@@ -149,6 +153,29 @@ Development / support / feedback
 ================================
 
 Please see `the CONTRIBUTING file <CONTRIBUTING.rst>`_.
+
+
+History
+=======
+
+I first announced the intention to build this tool `on the git mailing
+list in May 2016
+<https://public-inbox.org/git/20160527140811.GB11256@pacific.linksys.moosehall/>`_;
+however at the time I was under the mistaken impression that I could
+build it out of `the git-splice and git-transplant commands
+<https://github.com/git/git/compare/master...aspiers:transplant>`_
+which I was working on at that time.
+
+Thanks to SUSE's generous [Hack Week](https://hackweek.suse.com/)
+policy, I have the luxury of being able to spending some time getting
+this tool working.  I submitted a [Hack Week project
+page](https://hackweek.suse.com/projects/implement-git-explode-to-untangle-linear-sequence-of-commits-into-multiple-independent-topic-branches)
+
+In May 2018 I took advantage of another Hack Week to apply more polish
+and make the first release.  This was in preparation for demonstrating
+the software at [a Meetup
+event](https://www.meetup.com/londongit/events/248694943/) of the [Git
+London User Group](https://www.meetup.com/londongit/).
 
 
 License
