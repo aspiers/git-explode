@@ -166,16 +166,15 @@ build it out of `the git-splice and git-transplant commands
 <https://github.com/git/git/compare/master...aspiers:transplant>`_
 which I was working on at that time.
 
-Thanks to SUSE's generous [Hack Week](https://hackweek.suse.com/)
-policy, I have the luxury of being able to spending some time getting
-this tool working.  I submitted a [Hack Week project
-page](https://hackweek.suse.com/projects/implement-git-explode-to-untangle-linear-sequence-of-commits-into-multiple-independent-topic-branches)
+Thanks to SUSE's generous `Hack Week <https://hackweek.suse.com/>`_
+policy, I have had the luxury of working on this as a `Hack Week project
+<https://hackweek.suse.com/projects/implement-git-explode-to-untangle-linear-sequence-of-commits-into-multiple-independent-topic-branches>`_.
 
 In May 2018 I took advantage of another Hack Week to apply more polish
 and make the first release.  This was in preparation for demonstrating
-the software at [a Meetup
-event](https://www.meetup.com/londongit/events/248694943/) of the [Git
-London User Group](https://www.meetup.com/londongit/).
+the software at `a Meetup event
+<https://www.meetup.com/londongit/events/248694943/>`_ of the `Git
+London User Group <https://www.meetup.com/londongit/>`_.
 
 
 License
