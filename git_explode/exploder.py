@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import six
 from ostruct import OpenStruct
 
 from git_deps.detector import DependencyDetector
@@ -165,7 +166,7 @@ class GitExploder(object):
         no child dependencies
         """
         leaves = []
-        for sha, dependencies in deps_from.iteritems():
+        for sha, dependencies in six.iteritems(deps_from):
             if len(dependencies) == 0:
                 leaves.append(commits[sha])
         return leaves
