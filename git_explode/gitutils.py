@@ -16,7 +16,7 @@ class GitUtils(object):
     @classmethod
     def quiet_git(cls, *args):
         cmd_words = ['git'] + list(args)
-        output = subprocess.check_output(cmd_words)
+        output = subprocess.check_output(cmd_words, universal_newlines=True)
         return output.rstrip()
 
     @classmethod
