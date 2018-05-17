@@ -152,7 +152,7 @@ if you run ``git explode -h``.
 Development / support / feedback
 ================================
 
-Please see `the CONTRIBUTING file <CONTRIBUTING.rst>`_.
+Please see `the CONTRIBUTING.rst file <CONTRIBUTING.rst>`_.
 
 
 History
