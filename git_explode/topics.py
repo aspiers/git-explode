@@ -7,7 +7,7 @@ class TopicManager(object):
     mapping both individual commits and merges of commits to topic
     branch names.
 
-    This ensure we always know onto which topic branch to explode
+    This ensures we always know onto which topic branch to explode
     (cherry-pick) a new commit.
 
     """
