@@ -15,11 +15,11 @@ and if not then file a new issue.
 Helping with development
 ========================
 
-Any [pull request](https://help.github.com/articles/using-pull-requests/)
+Any `pull request <https://help.github.com/articles/using-pull-requests/>`_
 providing an enhancement or bugfix is extremely welcome!
 
 However my spare time to work on this project is very limited, so
 please follow these
-[guidelines on contributing](http://blog.adamspiers.org/2012/11/10/7-principles-for-contributing-patches-to-software-projects/) so that you can help me to help you ;-)
+`guidelines on contributing <http://blog.adamspiers.org/2012/11/10/7-principles-for-contributing-patches-to-software-projects/>`_ so that you can help me to help you ;-)
 
 Thanks in advance!
