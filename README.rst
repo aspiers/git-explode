@@ -145,8 +145,24 @@ Please see `the INSTALL.rst file <INSTALL.rst>`_.
 Usage
 =====
 
-The tool is not yet documented, but usage is fairly self-explanatory
-if you run ``git explode -h``.
+Usage is fairly self-explanatory if you run ``git explode -h``::
+
+    usage: git-explode [-h] [--version] [-d] [-p PREFIX] [-c NUM] BASE HEAD
+
+    Explode linear sequence of commits into topic branches
+
+    positional arguments:
+      BASE                  base of sequence to explode
+      HEAD                  head of sequence to explode
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --version             show program's version number and exit
+      -d, --debug           Show debugging
+      -p PREFIX, --prefix PREFIX
+                            prefix for all created topic branches
+      -c NUM, --context-lines NUM
+                            Number of lines of diff context to use [1]
 
 
 Development / support / feedback

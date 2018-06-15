@@ -18,6 +18,9 @@ def parse_args(args):
     :param args: command line parameters as list of strings
     :return: command line parameters as :obj:`argparse.Namespace`
     """
+    #####################################################################
+    # REMINDER!!  If you change this, remember to update README.rst too.
+    #####################################################################
     parser = argparse.ArgumentParser(
         description="Explode linear sequence of commits into topic branches")
     parser.add_argument(
