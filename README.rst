@@ -79,9 +79,10 @@ independence typically implies textual independence.  So while it
 might not be too uncommon for ``git-explode`` to separate
 logically-related changes into different branches, it should be pretty
 rare that it groups logically *unrelated* changes on the same branch.
-Combining this with the fact that ``git`` makes it easier to merge
-branches together than to split them apart suggests that ``git-explode``
-still has plenty of potential for saving effort.
+Combining this with the fact that ``git`` makes it easier to join
+commits on separate branches back together into one branch than to
+split them apart suggests that ``git-explode`` still has plenty of
+potential for saving effort.
 
 Thirdly, it is often unhelpful to allow `the quest for the perfect
 become the enemy of the good
