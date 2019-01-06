@@ -66,12 +66,17 @@ want.  And for as long as AI is an unsolved problem, it is very
 unlikely that it will ever develop totally reliable behaviour.
 So does that mean ``git-explode`` is useless?  Absolutely not!
 
-Firstly, when `best practices for commit hygiene
-<https://wiki.openstack.org/wiki/GitCommitMessages>`_ are adhered to,
-changes which are strongly logically related should be within the same
-commit anyway.  So in the example above, a change to a function and
-corresponding changes to the tests and/or documentation for that
-function should all be within a single commit.
+Firstly, when `best practices
+<https://crealytics.com/blog/5-reasons-keeping-git-commits-small/>`_
+for `commit structuring
+<https://wiki.openstack.org/wiki/GitCommitMessages#Structural_split_of_changes>`_
+are adhered to, changes which are strongly logically related should be
+placed within the same commit anyway.  So in the example above, a
+change to a function and corresponding changes to the tests and/or
+documentation for that function should all be within a single commit.
+(Although this is not the only valid approach; for a more advanced
+meta-history grouping mechanism, see `git-dendrify
+<https://github.com/bennorth/git-dendrify>`_.)
 
 Secondly, whilst textual independence does not imply logical
 independence, the converse is much more commonly true: logical
