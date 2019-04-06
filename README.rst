@@ -138,8 +138,10 @@ bigger scale.
 Use case #4: Breaking down giant commits
 ----------------------------------------
 
-Split giant commit into commits one per hunk, then regroup into
-commits based on that.
+Split giant commit into commits one per hunk, then regroup into topics
+along with previous related commits.  (Note that the previous related
+commits are required here for the regrouping to work, since hunks
+within a single commit are by definition independent of each other.)
 
 
 Installation
