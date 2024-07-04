@@ -27,6 +27,10 @@ class GitExploder(object):
         self.base_commit = GitUtils.ref_commit(repo, base)
         self.logger.debug("base commit %s is %s" %
                           (base, GitUtils.commit_summary(self.base_commit)))
+        head_commit = GitUtils.ref_commit(repo, head)
+        merge_base_id = repo.merge_base(self.base_commit.id, head_commit.id)
+        if not merge_base_id or merge_base_id != self.base_commit.id:
+            self.logger.warn("Base commit not ancestor of head, cherry-picks may fail")
         self.head = head
         self.context_lines = context_lines
         self.topic_mgr = TopicManager('topic%d', self.logger)
