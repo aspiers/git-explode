@@ -18,14 +18,14 @@ class ExplodeDependencyListener(DependencyListener):
     def new_commit(self, commit):
         """Adds the commit if it doesn't already exist.
         """
-        sha1 = commit.hex
+        sha1 = str(commit.id)
         for d in (self._dependencies_from, self._dependencies_on):
             if sha1 not in d:
                 d[sha1] = {}
 
     def new_dependency(self, dependee, dependency, path, line_num):
-        src = dependee.hex
-        dst = dependency.hex
+        src = str(dependee.id)
+        dst = str(dependency.id)
 
         cause = "%s:%d" % (path, line_num)
         self._dependencies_from[src][dst] = cause

@@ -97,7 +97,7 @@ class GitExploder(object):
 
         while todo:
             commit = todo.pop(0)
-            sha = commit.hex
+            sha = str(commit.id)
             self.logger.debug("Exploding %s" % GitUtils.commit_summary(commit))
             if unexploded_deps_from[sha]:
                 abort("BUG: unexploded deps from %s" %
@@ -151,7 +151,7 @@ class GitExploder(object):
         added to the explode queue.
 
         """
-        sha1 = exploded_commit.hex
+        sha1 = str(exploded_commit.id)
         for dependent in deps_on[sha1]:
             del unexploded_deps_from[dependent][sha1]
             if not unexploded_deps_from[dependent]:
