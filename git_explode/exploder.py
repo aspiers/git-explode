@@ -3,7 +3,6 @@
 
 import copy
 import six
-from ostruct import OpenStruct
 
 from git_deps.detector import DependencyDetector
 from git_deps.gitutils import GitUtils
@@ -12,6 +11,11 @@ from git_explode.gitutils import GitUtils as GitExplodeUtils
 from git_explode.listener import ExplodeDependencyListener
 from git_explode.topics import TopicManager
 
+class OpenStruct:
+    def __init__(self, data):
+        self.__dict__.update(data)
+    def __getattr__(self, key):
+        return self.__dict__[key] if key in self.__dict__ else None
 
 class GitExploder(object):
     """Explode a linear sequence of git commits into multiple independent
@@ -120,7 +124,7 @@ class GitExploder(object):
             self.checkout_new(branch, self.base)
             return
 
-        deps = deps.keys()
+        deps = list(deps.keys())
         assert len(deps) >= 1
         self.logger.debug("  deps: %s" % ' '.join([d[:8] for d in deps]))
 
