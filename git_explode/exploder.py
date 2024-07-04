@@ -18,7 +18,7 @@ class GitExploder(object):
     topic branches.
 
     """
-    def __init__(self, repo, base, head, debug, context_lines):
+    def __init__(self, repo, base, head, debug, context_lines, prefix):
         self.logger = standard_logger('git-explode', debug)
 
         self.debug = debug
@@ -29,7 +29,7 @@ class GitExploder(object):
                           (base, GitUtils.commit_summary(self.base_commit)))
         self.head = head
         self.context_lines = context_lines
-        self.topic_mgr = TopicManager('topic%d', self.logger)
+        self.topic_mgr = TopicManager('%s%%d' % prefix, self.logger)
 
         # Map commits to their exploded version
         self.exploded = {}

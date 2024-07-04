@@ -35,9 +35,10 @@ def parse_args(args):
     parser.add_argument(
         '-p', '--prefix',
         dest="prefix",
-        help="prefix for all created topic branches",
+        help="prefix for all created topic branches [%(default)]",
         type=str,
-        metavar="PREFIX")
+        metavar="PREFIX",
+        default="topic")
     parser.add_argument(
         '-c', '--context-lines',
         dest='context_lines',
@@ -63,7 +64,7 @@ def main(args):
     args = parse_args(args)
     repo = GitUtils.get_repo()
     exploder = GitExploder(repo, args.base, args.head, args.debug,
-                           args.context_lines)
+                           args.context_lines, args.prefix)
     exploder.run()
 
 
